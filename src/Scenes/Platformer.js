@@ -11,6 +11,7 @@ class Platformer extends Phaser.Scene {
         this.JUMP_VELOCITY = -600;
         this.PARTICLE_VELOCITY = 50;
         this.SCALE = 2.5;
+        this.shrooms = 0;
     }
 
     // preload() {
@@ -80,6 +81,10 @@ class Platformer extends Phaser.Scene {
             this.sound.play("loot", {
                 volume: 1
             });
+            this.shrooms ++;
+            if(this.shrooms >=5) {
+                this.scene.restart();
+            }
         });
         
         
