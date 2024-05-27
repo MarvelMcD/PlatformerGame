@@ -6,18 +6,24 @@ class Platformer extends Phaser.Scene {
     init() {
         // variables and settings
         this.ACCELERATION = 400;
-        this.DRAG = 500;    // DRAG < ACCELERATION = icy slide
+        this.DRAG = 1000;    // DRAG < ACCELERATION = icy slide
         this.physics.world.gravity.y = 1500;
         this.JUMP_VELOCITY = -600;
         this.PARTICLE_VELOCITY = 50;
-        this.SCALE = 2.0;
+        this.SCALE = 2.5;
     }
 
+    // preload() {
+    //     this.load.scenePlugin('AnimatedTiles', 'AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
+    // }
+
     create() {
+
+        this.physics.world.drawDebug = false;
         // Create a new tilemap game object which uses 18x18 pixel tiles, and is
         // 45 tiles wide and 25 tiles tall.
         // this.map = this.add.tilemap("platformer-level-1", 18, 18, 45, 25);
-        this.map = this.add.tilemap("platformer-level-1", 21, 21, 45, 25);
+        this.map = this.add.tilemap("platformer-level-1", 21, 21, 48, 25);
 
         // Add a tileset to the map
         // First parameter: name we gave the tileset in Tiled
@@ -32,6 +38,8 @@ class Platformer extends Phaser.Scene {
             collides: true
         });
 
+    
+
         // TODO: Add createFromObjects here
         // Find coins in the "Objects" layer in Phaser
         // Look for them by finding objects with the name "coin"
@@ -42,14 +50,16 @@ class Platformer extends Phaser.Scene {
         this.coins = this.map.createFromObjects("Objects", {
             name: "coin",
             key: "tilemap_sheet",
-            frame: 151
+            frame: 456
         });
+        
         
 
         // TODO: Add turn into Arcade Physics here
         // Since createFromObjects returns an array of regular Sprites, we need to convert 
         // them into Arcade Physics sprites (STATIC_BODY, so they don't move) 
         this.physics.world.enable(this.coins, Phaser.Physics.Arcade.STATIC_BODY);
+        
 
         // Create a Phaser group out of the array this.coins
         // This will be used for collision detection below.
@@ -67,7 +77,11 @@ class Platformer extends Phaser.Scene {
         // Handle collision detection with coins
         this.physics.add.overlap(my.sprite.player, this.coinGroup, (obj1, obj2) => {
             obj2.destroy(); // remove coin on overlap
+            this.sound.play("loot", {
+                volume: 1
+            });
         });
+        
         
 
         // set up Phaser-provided cursor key input
@@ -85,7 +99,7 @@ class Platformer extends Phaser.Scene {
         my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
             frame: ['smoke_03.png', 'smoke_09.png'],
             // TODO: Try: add random: true
-            scale: {start: 0.01, end: 0.1},
+            scale: {start: 0.01, end: 0.01},
             // TODO: Try: maxAliveParticles: 8,
             lifespan: 300,
             // TODO: Try: gravityY: -400,
@@ -94,6 +108,7 @@ class Platformer extends Phaser.Scene {
 
         my.vfx.walking.stop();
         
+        
 
         // TODO: add camera code here
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -101,7 +116,7 @@ class Platformer extends Phaser.Scene {
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(this.SCALE);
         
-
+        
     }
 
     update() {
@@ -157,6 +172,9 @@ class Platformer extends Phaser.Scene {
         }
         if(my.sprite.player.body.blocked.down && Phaser.Input.Keyboard.JustDown(cursors.up)) {
             my.sprite.player.body.setVelocityY(this.JUMP_VELOCITY);
+            this.sound.play("jumpsound", {
+                volume: 1
+            });
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.rKey)) {

@@ -26,9 +26,15 @@ class Load extends Phaser.Scene {
         // The multiatlas was created using TexturePacker and the Kenny
         // Particle Pack asset pack.
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+        this.load.audio("loot", "loot.ogg");
+        this.load.audio("jumpsound", "jumpsound.ogg");
+
+        // plugin for animated tiles
+        // this.load.scenePlugin('AnimatedTiles', 'AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
     }
 
     create() {
+        
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNames('platformer_characters', {
