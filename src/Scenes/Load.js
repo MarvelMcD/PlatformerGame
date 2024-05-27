@@ -15,8 +15,8 @@ class Load extends Phaser.Scene {
 
         // Load the tilemap as a spritesheet
         this.load.spritesheet("tilemap_sheet", "tilemap_packed.png", {
-            frameWidth: 18,
-            frameHeight: 18
+            frameWidth: 21,
+            frameHeight: 21
         });
 
         // Oooh, fancy. A multi atlas is a texture atlas which has the textures spread
